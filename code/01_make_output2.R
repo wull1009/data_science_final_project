@@ -1,5 +1,3 @@
-#! TO DO:
-#!   add call to here::i_am
 here::i_am("code/01_make_output2.R")
 
 lm2=lm(charges~smoker+age+sex+bmi+children+v1+v2+v3,data=a1)
@@ -7,8 +5,6 @@ lm.aic=step(lm2,trace=F)
 library(gtsummary)
 table2=tbl_regression(lm.aic)
 
-#! TO DO: 
-#!   save random_numbers1 in output1 directory
 saveRDS(
   table2, 
   file = here::here("output2/output2.rds")
