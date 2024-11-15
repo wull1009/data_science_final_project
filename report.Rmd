@@ -1,0 +1,108 @@
+---
+title: "report"
+author: "Linlin Wu"
+date: "2024-09-28"
+output: html_document
+---
+```{r, here-i-am, include = FALSE}
+here::i_am("report.Rmd")
+```
+## I. Introduction
+
+In the United States, aside from 'Medicare' and 'Medicaid' (insurance for the elderly and the poor), about 70% of Americans need to purchase private commercial health insurance. This insurance can be purchased individually or provided by employers, with premiums either covered by the company or jointly by the company and the individual. Therefore, to make a profit, insurance companies need to collect annual premiums that exceed the medical expenses paid out to beneficiaries. Thus, balancing premiums and the cost of medical services for beneficiaries becomes critical. Insurance companies invest significant time and money in developing models that can accurately predict medical expenses. This study aims to predict the average medical expenses of this group based on data from 1,338 cases provided by the U.S. Census Bureau.
+
+We divided the data into a training set and a test set. To make the model more accurate, 80% of the data was used as the training set and 20% as the test set. 'Charges' were used as the dependent variable, while 'age', 'sex', 'bmi', 'children', and 'smoker' were used as independent variables. 'Region' was transformed into dummy variables for analysis. First, descriptive analysis was performed. Using R for visualization, we inferred the factors that significantly impact insurance premiums and concluded that smoking is a major factor contributing to the difference in premiums between men and women, and also a key reason for higher premiums.
+
+Next, parameter estimation was conducted. Based on the principle of least squares, we performed a linear regression. The results showed that the model largely meets the requirements of linear regression, with an adjusted R² of 0.7486. After that, we proceeded with variable selection. A stepwise regression model was established, and the AIC value and the corresponding regression equation were obtained.
+
+## II. Model Definition
+
+### Analysis Purpose 
+The purpose is to use patient data to predict the average medical expenses of this segment of the population. The estimates obtained can be used to set annual premium prices by creating actuarial tables based on expected treatment costs.
+
+### Considered Indicators 
+There are a total of 8 indicators: Age (age), sex (male, female), body mass index (BMI), number of children (number of children/dependents covered by the insurance plan), smoker (yes/no), and region (split into three dummy variables: V1=1 for southwest, V1=0 otherwise; V2=1 for southeast, V2=0 otherwise; V3=1 for northwest, V3=0 otherwise).
+
+The original dataset is shown below.
+```{r chunk,echo=FALSE}
+a=read.csv("data_smoke.csv",header=T,encoding = "UTF-8")
+head(a)
+```
+
+We processed the data as follows: in the 'sex' variable, female=1 and male=0. In the 'smoker' variable, yes=1 and no=0. Each column of data was considered either as an independent variable or a dummy variable in the regression analysis. The data arrangement exhibits a certain randomness, so we designated rows 1-1070 as the training set and rows 1071-1388 as the test set.
+
+The dataset after data processing is shown below.
+
+```{r,echo=FALSE}
+options(warn = -1)
+a$sex[which(a$sex=='female')]=1
+a$sex[which(a$sex=='male')]=0
+a$smoker[which(a$smoker=='yes')]=1
+a$smoker[which(a$smoker=='no')]=0
+a$sex=as.numeric(a$sex)
+a$smoker=as.numeric(a$smoker)
+head(a)
+a=a[-9]
+a1=a[c(1:1070),]
+```
+
+## III. Descriptive analysis
+First, let's explore the impact of gender on insurance charges, as shown in Figure 1.
+```{r, echo=FALSE,fig.align='center'}
+library(ggplot2)
+library(magick)
+a$sex=as.factor(a$sex)
+
+image_read( 
+  here::here("output3/output3.png")
+)
+```
+From Figure 1, we can see that the distribution of insurance charges for men is wider than that for women, which also means that more men tend to have higher insurance charges. Therefore, we can further investigate the reasons why men's insurance charges are higher than women's. Let's examine the BMI differences between men and women.
+```{r,echo=FALSE,fig.align='center'}
+image_read(
+  here::here("output4/output4.png")
+)
+```
+
+
+As shown in Figure 2, among the 1,389 individuals surveyed, there is almost no difference in age and BMI between men and women. Therefore, the difference in insurance charges between genders is not caused by age or BMI. Next, let's examine whether the number of children plays a role in causing the difference in insurance charges between men and women.
+
+
+
+```{r,echo=FALSE,fig.align='center'}
+image_read(
+  here::here("output5/output5.png")
+)
+```
+From Figure 3, we can see that the sample does not show a difference in the number of children between men and women. Therefore, let's further investigate whether smoking contributes to the higher insurance charges for men.
+```{r,echo=FALSE,fig.align='center'}
+library(magick)
+image_read(here::here("output6/output6.png")
+)
+```
+As shown in Figure 4, it is evident that smoking is a reason for higher insurance charges, and there are more male smokers than female smokers. Thus, smoking is one of the main factors contributing to higher insurance charges for men.
+
+## IV. Model establishment
+We used the least squares method to construct the model, and the results of the regression analysis are shown in the table below.
+```{r,echo=FALSE}
+options(warn = -1)
+readRDS(
+  here::here("output1/output1.rds")
+)
+```
+From the table above, this regression analysis shows that smoking status is the most significant factor influencing medical expenses. Smokers, on average, incur about 23,653 more in medical costs than non-smokers, with a highly significant p-value (<0.001). Age and BMI also have a positive correlation with medical costs, with each additional year of age or unit of BMI increasing costs by approximately 259 and 339, respectively, both with strong significance (p < 0.001). Additionally, the number of dependents covered by the insurance is also positively correlated with costs. In contrast, gender and some regional variables do not have a significant impact on medical expenses, with the p-value for gender being 0.5, indicating no notable effect on costs.
+
+We can preliminarily obtain the linear regression equation:
+y = -12117.55 + 259 * age + 254 * sex + 339 * bmi + 439 * children + 23653 * smoker - 1246 * v1 - 1119 * v2 - 472 * v3.
+
+## V. Variable selection
+From the above modeling analysis, it can be seen that the linear model is reasonable. Therefore, we choose to establish a more optimal stepwise regression model for further analysis. We use AIC for variable selection. The model is considered optimal when the AIC reaches its minimum. The results of the model are shown in the table below.
+
+```{r,echo=FALSE}
+readRDS(
+  here::here("output2/output2.rds")
+)
+```
+
+The resulting equation is:
+y = -11749.63 + 23634 * smoker + 260 * age + 339 * bmi + 439 * children - 1009 * v1 - 876 * v2
