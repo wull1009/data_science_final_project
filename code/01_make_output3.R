@@ -1,5 +1,7 @@
 here::i_am("code/01_make_output3.R")
 
+a=read.csv(file=here::here("data_smoke.csv"))
+
 library(ggplot2)
 a$sex=as.factor(a$sex)
 
