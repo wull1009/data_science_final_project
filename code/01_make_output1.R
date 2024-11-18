@@ -1,6 +1,6 @@
 here::i_am("code/01_make_output1.R")
 
-data=read.csv(file=here::here("data_smoke.csv"))
+a1=read.csv(file=here::here("data_smoke.csv"))
 
 library(gtsummary)
 lm1 <- lm(charges ~ as.factor(smoker) + age + sex + bmi + children + v1 + v2 + v3, data = a1)
