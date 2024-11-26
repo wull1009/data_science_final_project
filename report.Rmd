@@ -6,6 +6,7 @@ output: html_document
 ---
 ```{r, here-i-am, include = FALSE}
 here::i_am("report.Rmd")
+library("gridExtra")
 ```
 ## I. Introduction
 

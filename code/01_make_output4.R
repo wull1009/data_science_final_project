@@ -1,7 +1,9 @@
 #! TO DO:
 #!   add call to here::i_am
 here::i_am("code/01_make_output4.R")
-
+a <- read.csv(
+  file=here::here("data_smoke.csv")
+)
 library(ggplot2)
 library(RColorBrewer)
 library(gridExtra)
