@@ -33,3 +33,15 @@
 
 `report.Rmd`
 - loads each set from output1-6 while have descriptive at the same time
+
+## How to set up the environment
+
+To restore the required R package environment for this project, use the following steps:
+
+1. Make sure you have R installed on your system.
+2. Clone the repository:
+   ```bash
+   git clone https://github.com/wull1009/data_science_final_project.git
+3. Navigate to the project directory
+  cd data_science_final_project
+

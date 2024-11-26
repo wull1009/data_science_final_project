@@ -48,3 +48,7 @@ PHONY:	clean
 clean:
 	rm	-f output1/*.rds	output2/*.rds	output3/*.png output4/*.png output5/*.png Rplots.pdf output6/*.png&&	\
 	rm	-f	report.html
+
+install:
+	Rscript -e "renv::restore()"
+
