@@ -1,3 +1,16 @@
+## Build Docker Image
+To build the Docker image, run:
+```bash
+docker build -t wull1009/debug_renv .
+
+## Run Container
+To run the container and generate the report, run:
+```bash
+docker run --rm -v $(pwd)/report:/project/report wull1009/debug_renv
+
+## DockerHub Repository
+The Docker image is available at: wull1009/debug_renv
+
 # Code Description
 
 `code/01_make_output1.R`
@@ -44,4 +57,5 @@ To restore the required R package environment for this project, use the followin
    git clone https://github.com/wull1009/data_science_final_project.git
 3. Navigate to the project directory
   cd data_science_final_project
-
+4. Run the following command to install all required packages:
+  make install
